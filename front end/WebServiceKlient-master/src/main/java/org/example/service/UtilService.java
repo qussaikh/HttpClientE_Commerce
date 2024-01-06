@@ -37,6 +37,21 @@ public class UtilService {
         return result;
     }
 
+    public static int getIntegerInput(String prompt) {
+        Scanner scanner = new Scanner(System.in);
+        int result;
+        while (true) {
+            try {
+                System.out.print(prompt);
+                result = Integer.parseInt(scanner.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
+        }
+        return result;
+    }
+
     public static StringEntity createPayload(Object object) throws JsonProcessingException {
         //Skapa och inkludera en Payload till request
         ObjectMapper mapper = new ObjectMapper();

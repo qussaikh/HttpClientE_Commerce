@@ -2,6 +2,8 @@ package org.example.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpPut;
 import org.example.models.ClothingItem;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -25,7 +27,7 @@ public class ClothingItemService {
     private static final CloseableHttpClient httpClient = HttpClients.createDefault();
 
     public static List<ClothingItem> getAllClothingItems(String jwt) throws IOException, ParseException {
-        HttpGet request = new HttpGet("http://localhost:8080/clothingitems");
+        HttpGet request = new HttpGet("http://localhost:8080/allproducts");
         request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
         CloseableHttpResponse response = httpClient.execute(request);
 
@@ -39,7 +41,16 @@ public class ClothingItemService {
         ArrayList<ClothingItem> clothingItems = mapper.readValue(EntityUtils.toString(entity), new TypeReference<ArrayList<ClothingItem>>() {});
 
         for (ClothingItem item : clothingItems) {
-            System.out.println(String.format("Clothing Item: %s, Cost: %f, Description: %s", item.getName(), item.getCost(), item.getDescription()));
+            System.out.println(String.format("Clothing Item: %s, Cost: %f, Description: %s, Category: %s, Color: %s, Dimension : %s, Manufacturer : %s, Quantity : %s ",
+                    item.getProductName(),
+                    item.getPrice(),
+                    item.getSpecification(),
+                    item.getCategory(),
+                    item.getColor(),
+                    item.getDimension(),
+                    item.getManufacturer(),
+                    item.getQuantity()
+            ));
         }
 
         return clothingItems;
@@ -50,9 +61,14 @@ public class ClothingItemService {
     private static ClothingItem createClothingItem() {
         ClothingItem newClothingItem = new ClothingItem();
 
-        newClothingItem.setName(getStringInput("Enter the name of the clothing item: "));
-        newClothingItem.setCost(getDoubleInput("Enter the cost of the clothing item: "));
-        newClothingItem.setDescription(getStringInput("Enter the description of the clothing item: "));
+        newClothingItem.setProductName(getStringInput("Enter the name of the clothing item: "));
+        newClothingItem.setPrice(getDoubleInput("Enter the cost of the clothing item: "));
+        newClothingItem.setColor(getStringInput("Enter the color of the clothing item: "));
+        newClothingItem.setDimension(getStringInput("Enter the dimension of the clothing item: "));
+        newClothingItem.setSpecification(getStringInput("Enter the Specification of the clothing item: "));
+        newClothingItem.setManufacturer(getStringInput("Enter the manufacturer of the clothing item: "));
+        newClothingItem.setQuantity(getIntegerInput("Enter the Quantity of the clothing item: "));
+        newClothingItem.setCategory(getStringInput("Enter the category of the clothing item: "));
 
         return newClothingItem;
     }
@@ -60,7 +76,7 @@ public class ClothingItemService {
     public static void addClothingItem(String jwt) throws IOException, ParseException {
         ClothingItem newClothingItem = createClothingItem();
 
-        HttpPost request = new HttpPost("http://localhost:8080/clothingitems");
+        HttpPost request = new HttpPost("http://localhost:8080/addnewproducts");
         ObjectMapper mapper = new ObjectMapper();
         StringEntity payload = new StringEntity(mapper.writeValueAsString(newClothingItem), ContentType.APPLICATION_JSON);
 
@@ -78,13 +94,78 @@ public class ClothingItemService {
 
         ClothingItem responseItem = mapper.readValue(EntityUtils.toString(entity), new TypeReference<ClothingItem>() {});
 
-        if (responseItem.getName().equals(newClothingItem.getName()) &&
-                responseItem.getCost() == newClothingItem.getCost() &&
-                responseItem.getDescription().equals(newClothingItem.getDescription())) {
+        if (responseItem.getProductName().equals(newClothingItem.getProductName()) &&
+                responseItem.getPrice() == newClothingItem.getPrice() &&
+                responseItem.getSpecification().equals(newClothingItem.getSpecification())) {
             System.out.println("Success for new clothing item!");
         } else {
             System.out.println("Something went wrong!");
         }
     }
+
+    public static ClothingItem getClothingItemById(String jwt, int itemId) throws IOException, ParseException {
+        String url = String.format("http://localhost:8080/product/%d", itemId);
+        HttpGet request = new HttpGet(url);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
+        CloseableHttpResponse response = httpClient.execute(request);
+
+        if (response.getCode() != 200) {
+            System.out.println("Error occurred");
+            return null;
+        }
+
+        HttpEntity entity = response.getEntity();
+        ObjectMapper mapper = new ObjectMapper();
+        ClothingItem clothingItem = mapper.readValue(EntityUtils.toString(entity), ClothingItem.class);
+
+        System.out.println(String.format("Clothing Item: %s, Cost: %f, Description: %s, Category: %s, Color: %s, Dimension : %s, Manufacturer : %s, Quantity : %s ",
+                clothingItem.getProductName(),
+                clothingItem.getPrice(),
+                clothingItem.getSpecification(),
+                clothingItem.getCategory(),
+                clothingItem.getColor(),
+                clothingItem.getDimension(),
+                clothingItem.getManufacturer(),
+                clothingItem.getQuantity()
+        ));
+
+        return clothingItem;
+    }
+
+    public static void deleteClothingItem(String jwt, int itemId) throws IOException, ParseException {
+        String url = String.format("http://localhost:8080/deleteproduct/%d", itemId);
+        HttpDelete request = new HttpDelete(url);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
+        CloseableHttpResponse response = httpClient.execute(request);
+
+        if (response.getCode() == 200) {
+            System.out.println("Clothing item deleted successfully.");
+        } else {
+            System.out.println("Error occurred while deleting the clothing item.");
+        }
+    }
+
+    public static void updateClothingItem(String jwt, int itemId, ClothingItem updatedItem) throws IOException, ParseException {
+        String url = "http://localhost:8080/updateproducts";
+        HttpPut request = new HttpPut(url);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        // Konvertera ClothingItem-objektet till JSON-sträng
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonBody = mapper.writeValueAsString(updatedItem);
+        StringEntity entity = new StringEntity(jsonBody);
+        request.setEntity(entity);
+
+        CloseableHttpResponse response = httpClient.execute(request);
+
+        if (response.getCode() == 200) {
+            System.out.println("Clothing item updated successfully.");
+        } else {
+            System.out.println("Error occurred while updating the clothing item.");
+        }
+    }
+
+
 
 }

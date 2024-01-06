@@ -135,8 +135,8 @@ public class UserService {
         }
 
         System.out.println("Inloggad");
-        System.out.println(String.format("JWT token: %s", loginResponse.getAccess_token()));
-        System.out.println(String.format("JWT token: %s", loginResponse.getRefresh_token()));
+        System.out.println(String.format("Access token: %s", loginResponse.getAccess_token()));
+        System.out.println(String.format("Refresh token: %s", loginResponse.getRefresh_token()));
         return loginResponse;
     }
 
