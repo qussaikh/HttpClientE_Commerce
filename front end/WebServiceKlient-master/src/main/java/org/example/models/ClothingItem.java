@@ -12,9 +12,6 @@ public class ClothingItem {
     private String productName;
     private double price;
     private String color;
-    private String dimension;
-    private String specification;
-    private String manufacturer;
     private int quantity;
     private int createdBy;
     private String category;

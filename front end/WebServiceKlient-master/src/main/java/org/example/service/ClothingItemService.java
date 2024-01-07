@@ -41,14 +41,11 @@ public class ClothingItemService {
         ArrayList<ClothingItem> clothingItems = mapper.readValue(EntityUtils.toString(entity), new TypeReference<ArrayList<ClothingItem>>() {});
 
         for (ClothingItem item : clothingItems) {
-            System.out.println(String.format("Clothing Item: %s, Cost: %f, Description: %s, Category: %s, Color: %s, Dimension : %s, Manufacturer : %s, Quantity : %s ",
+            System.out.println(String.format("Clothing Item: %s, Cost: %f, Category: %s, Color: %s, Quantity : %s ",
                     item.getProductName(),
                     item.getPrice(),
-                    item.getSpecification(),
                     item.getCategory(),
                     item.getColor(),
-                    item.getDimension(),
-                    item.getManufacturer(),
                     item.getQuantity()
             ));
         }
@@ -64,9 +61,6 @@ public class ClothingItemService {
         newClothingItem.setProductName(getStringInput("Enter the name of the clothing item: "));
         newClothingItem.setPrice(getDoubleInput("Enter the cost of the clothing item: "));
         newClothingItem.setColor(getStringInput("Enter the color of the clothing item: "));
-        newClothingItem.setDimension(getStringInput("Enter the dimension of the clothing item: "));
-        newClothingItem.setSpecification(getStringInput("Enter the Specification of the clothing item: "));
-        newClothingItem.setManufacturer(getStringInput("Enter the manufacturer of the clothing item: "));
         newClothingItem.setQuantity(getIntegerInput("Enter the Quantity of the clothing item: "));
         newClothingItem.setCategory(getStringInput("Enter the category of the clothing item: "));
 
@@ -96,7 +90,7 @@ public class ClothingItemService {
 
         if (responseItem.getProductName().equals(newClothingItem.getProductName()) &&
                 responseItem.getPrice() == newClothingItem.getPrice() &&
-                responseItem.getSpecification().equals(newClothingItem.getSpecification())) {
+                responseItem.getColor().equals(newClothingItem.getColor())) {
             System.out.println("Success for new clothing item!");
         } else {
             System.out.println("Something went wrong!");
@@ -118,14 +112,11 @@ public class ClothingItemService {
         ObjectMapper mapper = new ObjectMapper();
         ClothingItem clothingItem = mapper.readValue(EntityUtils.toString(entity), ClothingItem.class);
 
-        System.out.println(String.format("Clothing Item: %s, Cost: %f, Description: %s, Category: %s, Color: %s, Dimension : %s, Manufacturer : %s, Quantity : %s ",
+        System.out.println(String.format("Clothing Item: %s, Cost: %f, Category: %s, Color: %s, Quantity : %s ",
                 clothingItem.getProductName(),
                 clothingItem.getPrice(),
-                clothingItem.getSpecification(),
                 clothingItem.getCategory(),
                 clothingItem.getColor(),
-                clothingItem.getDimension(),
-                clothingItem.getManufacturer(),
                 clothingItem.getQuantity()
         ));
 
@@ -165,7 +156,5 @@ public class ClothingItemService {
             System.out.println("Error occurred while updating the clothing item.");
         }
     }
-
-
 
 }

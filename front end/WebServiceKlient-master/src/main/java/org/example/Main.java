@@ -23,11 +23,11 @@ public class Main {
             return;
         }
 
-        getAllClothingItems(login.getAccess_token());
+        //getAllClothingItems(login.getAccess_token());
         //addClothingItem(login.getAccess_token());
         //getAllClothingItems(login.getAccess_token());
         System.out.println("-------------------");
-        //int itemid = 52;
+        int itemid = 3;
         //getClothingItemById(login.getAccess_token(), itemid);
         //deleteClothingItem(login.getAccess_token(),itemid);
 
@@ -51,7 +51,11 @@ public class Main {
 //          int custId = 1;
 //          addToCart(login.getAccess_token(),prodId,custId);
           //-------------------------------------------------
-        clearCart(login.getAccess_token());
+        //clearCart(login.getAccess_token());
+        removeCartItemById(login.getAccess_token(),2);
+        //getAllCartItems(login.getAccess_token());
+
+
 
 
 

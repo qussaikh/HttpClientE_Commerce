@@ -71,5 +71,55 @@ public class CartService {
     }
 
 
+    public static List<CartItem> getAllCartItems(String jwt) throws IOException, ParseException {
+        String url = "http://localhost:8080/Cart/cart/viewAllCart";
+        HttpGet request = new HttpGet(url);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
+        CloseableHttpResponse response = httpClient.execute(request);
+        System.out.println("Response Code: " + response.getCode());
+
+        if (response.getCode() != 200) {
+            System.out.println("Error occurred while fetching cart items.");
+            return null;
+        }
+
+        HttpEntity entity = response.getEntity();
+        ObjectMapper mapper = new ObjectMapper();
+        List<CartItem> cartItems = mapper.readValue(EntityUtils.toString(entity), new TypeReference<List<CartItem>>() {});
+
+        for (CartItem cartItem : cartItems) {
+            System.out.printf("Product Name: %s, Price: %f, Color: %s%n",
+                    cartItem.getProductName(),
+                    cartItem.getPrice(),
+                    cartItem.getColor());
+        }
+
+        double totalPrice = 0.0;
+
+        for (CartItem cartItem : cartItems) {
+            totalPrice += cartItem.getPrice();
+        }
+        System.out.println("Total Price: " + totalPrice);
+
+
+        return cartItems;
+    }
+
+    public static void removeCartItemById(String jwt, int cartItemId) throws IOException, ParseException {
+        String url = String.format("http://localhost:8080/Cart/cart/removeCartItem/%d", cartItemId);
+        HttpDelete request = new HttpDelete(url);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
+        CloseableHttpResponse response = httpClient.execute(request);
+
+        if (response.getCode() == 200) {
+            System.out.println("Cart item removed successfully.");
+        } else {
+            System.out.println("Error occurred while removing the cart item.");
+        }
+    }
+
+
+
+
 
 }
