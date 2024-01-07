@@ -6,7 +6,7 @@ import org.example.models.LoginResponse;
 
 import java.io.IOException;
 
-import static org.example.service.BookService.*;
+import static org.example.service.CartService.*;
 import static org.example.service.UserService.*;
 import static org.example.service.ClothingItemService.*;
 
@@ -31,17 +31,24 @@ public class Main {
         //getClothingItemById(login.getAccess_token(), itemid);
         //deleteClothingItem(login.getAccess_token(),itemid);
 
-        int itemId = 2;
-        ClothingItem retrievedItem = getClothingItemById(login.getAccess_token(), itemId);
-
-        // Om produkten hittades, uppdatera den
-        if (retrievedItem != null) {
-            retrievedItem.setProductName("Updated Product Name");
-            retrievedItem.setPrice(799.99);
-
-            // Uppdatera produkten
-            updateClothingItem(login.getAccess_token(), itemId, retrievedItem);
-        }
+        //---------------------------------------------------------------------
+        // Update products
+//        int itemId = 2;
+//        ClothingItem retrievedItem = getClothingItemById(login.getAccess_token(), itemId);
+//
+//       // Om produkten hittades, uppdatera den
+//        if (retrievedItem != null) {
+//            retrievedItem.setProductName("Updated Product Name");
+//            retrievedItem.setPrice(799.99);
+//
+//            // Uppdatera produkten
+//            updateClothingItem(login.getAccess_token(), itemId, retrievedItem);
+//        }
+//
+         //-----------------------------------------
+          int prodId = 1;
+          int custId = 1;
+          addToCart(login.getAccess_token(),prodId,custId);
 
 
 
