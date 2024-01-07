@@ -1,15 +1,23 @@
 package org.example.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.example.models.CartItem;
 
 import java.io.IOException;
+import java.util.List;
 
 public class CartService {
 
@@ -45,6 +53,20 @@ public class CartService {
             System.out.println("Product added to cart successfully.");
         } else {
             System.out.println("Error occurred while adding the product to the cart.");
+        }
+    }
+
+    public static void clearCart(String jwt) throws IOException, ParseException {
+        String url = "http://localhost:8080/Cart/cart/clear";
+        HttpDelete request = new HttpDelete(url);
+        request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
+        CloseableHttpResponse response = httpClient.execute(request);
+        System.out.println("Response Code: " + response.getCode());
+
+        if (response.getCode() == 200) {
+            System.out.println("Cart cleared successfully.");
+        } else {
+            System.out.println("Error occurred while clearing the cart.");
         }
     }
 

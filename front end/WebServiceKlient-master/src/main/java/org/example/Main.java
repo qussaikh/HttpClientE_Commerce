@@ -46,9 +46,14 @@ public class Main {
 //        }
 //
          //-----------------------------------------
-          int prodId = 1;
-          int custId = 1;
-          addToCart(login.getAccess_token(),prodId,custId);
+        //Add  item to cart
+//          int prodId = 1;
+//          int custId = 1;
+//          addToCart(login.getAccess_token(),prodId,custId);
+          //-------------------------------------------------
+        clearCart(login.getAccess_token());
+
+
 
 
 
