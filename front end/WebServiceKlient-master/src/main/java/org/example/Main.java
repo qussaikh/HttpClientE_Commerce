@@ -27,7 +27,7 @@ public class Main {
         //addClothingItem(login.getAccess_token());
         //getAllClothingItems(login.getAccess_token());
         System.out.println("-------------------");
-        int itemid = 3;
+        //int itemid = 3;
         //getClothingItemById(login.getAccess_token(), itemid);
         //deleteClothingItem(login.getAccess_token(),itemid);
 
@@ -47,13 +47,14 @@ public class Main {
 //
          //-----------------------------------------
         //Add  item to cart
-//          int prodId = 1;
+//          int prodId = 2;
 //          int custId = 1;
-//          addToCart(login.getAccess_token(),prodId,custId);
+//          int quantity = 2;
+//          addToCart(login.getAccess_token(),prodId,custId,quantity);
           //-------------------------------------------------
         //clearCart(login.getAccess_token());
-        removeCartItemById(login.getAccess_token(),2);
-        //getAllCartItems(login.getAccess_token());
+        //removeCartItemById(login.getAccess_token(),2);
+        getAllCartItems(login.getAccess_token());
 
 
 

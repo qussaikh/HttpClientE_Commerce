@@ -23,7 +23,7 @@ public class CartService {
 
     private static final CloseableHttpClient httpClient = HttpClients.createDefault();
 
-    public static void addToCart(String jwt, int productId, int customerId) throws IOException {
+    public static void addToCart(String jwt, int productId, int customerId, int quantity) throws IOException {
         String url = String.format("http://localhost:8080/Cart/addtocart/%d/%d", productId, customerId);
         HttpPost request = new HttpPost(url);
         request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwt);
@@ -33,12 +33,15 @@ public class CartService {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode requestBody = mapper.createObjectNode();
 
+        // Lägg till "quantity" i JSON-body
+        requestBody.put("quantity", quantity);
+
         // Skapa cartItem och customerlist i JSON-body
         ObjectNode cartItemNode = mapper.createObjectNode();
-        cartItemNode.put("id", productId);
+        cartItemNode.put("productId", productId);
 
         ObjectNode customerlistNode = mapper.createObjectNode();
-        customerlistNode.put("custId", customerId);
+        customerlistNode.put("userId", customerId);
 
         requestBody.set("cartItem", cartItemNode);
         requestBody.set("customerlist", customerlistNode);
@@ -55,6 +58,7 @@ public class CartService {
             System.out.println("Error occurred while adding the product to the cart.");
         }
     }
+
 
     public static void clearCart(String jwt) throws IOException, ParseException {
         String url = "http://localhost:8080/Cart/cart/clear";
@@ -97,7 +101,7 @@ public class CartService {
         double totalPrice = 0.0;
 
         for (CartItem cartItem : cartItems) {
-            totalPrice += cartItem.getPrice();
+            totalPrice += cartItem.getPrice() * cartItem.getQuantity();
         }
         System.out.println("Total Price: " + totalPrice);
 
